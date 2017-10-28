@@ -1,7 +1,5 @@
 var data = {
-  // 'Y_POSITIONS': [65, 148, 231, 314, 397],
   'Y_POSITIONS': [65, 148, 231],
-  // 'ENEMY_MIN_STARTING_X': -505,
   'ENEMY_MIN_STARTING_X': -91,
   'ENEMY_MAX_STARTING_X': -91,
   'ENEMY_MIN_SPEED': 100,
@@ -49,12 +47,12 @@ State.prototype.restart = function() {
 
 
 // 这是我们的玩家要躲避的敌人 
-var Enemy = function() {
+var Enemy = function(sprite) {
     // 要应用到每个敌人的实例的变量写在这里
     // 我们已经提供了一个来帮助你实现更多
 
     // 敌人的图片或者雪碧图，用一个我们提供的工具函数来轻松的加载文件
-    this.sprite = "images/enemy-bug.png";
+    this.sprite = sprite;
     // the reset function will reset the enemy's position.
     this.reset();
 };
@@ -99,18 +97,8 @@ Player.prototype.reset = function() {
     this.catch = false;
 };
 
-
-Player.prototype.update = function(dt) {
-    // 你应该给每一次的移动都乘以 dt 参数，以此来保证游戏在所有的电脑上
-    // 都是以同样的速度运行的
-};
-
 Player.prototype.render = function() {
-    // Resources.load(this.sprite);
-    // Resources.onReady();
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
-    // console.log(im);
-    
 };
 
 Player.prototype.hide = function() {
