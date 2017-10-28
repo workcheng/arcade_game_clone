@@ -1,3 +1,11 @@
+/**
+ * app.JS 定义了玩家类，
+
+
+/**
+ * 定义常量
+ * @type {{Y_POSITIONS: [*], ENEMY_MIN_STARTING_X: number, ENEMY_MAX_STARTING_X: number, ENEMY_MIN_SPEED: number, ENEMY_MAX_SPEED: number, PLAYER_STARTING_X: number, PLAYER_STARTING_Y: number}}
+ */
 var data = {
   'Y_POSITIONS': [65, 148, 231],
   'ENEMY_MIN_STARTING_X': -91,
@@ -5,11 +13,13 @@ var data = {
   'ENEMY_MIN_SPEED': 100,
   'ENEMY_MAX_SPEED': 300,
   'PLAYER_STARTING_X': 303,
-  'PLAYER_STARTING_Y': 400,
-  'NUM_OF_POKEBALLS': 5
+  'PLAYER_STARTING_Y': 400
 };
 
-// Set the ememy sprite list.
+/**
+ * 指定敌人不同的图片
+ * @type {[*]}
+ */
 var enemySpriteList = [
     'images/enemy-bug.png',
     'images/enemy-bug.png',
@@ -18,62 +28,56 @@ var enemySpriteList = [
     'images/enemy-bug.png'
 ];
 
-/* This Class manages game state.
+/** 场景类
  *
  */
 var State = function() {
-    this.gameOn = false;
 };
 
-// When game starts, play this function. Since gameOn is false, the update() does not updates, but render() renders. Therefore you need to hide pikachu and pokeball. And waits for player to click the play button.
-State.prototype.intro = function() {
-    // No need to hide the enemies because they are all off-screen somewhere between x=-101 and x=-505; Also no need to hide rocks because the list is not filled yet.
-    player.hide();
-};
-
+/**
+ * 场景开始／复位游戏
+ */
 State.prototype.restart = function() {
-    // set the game state to be on so that the main function starts updateing.
-    this.gameOn = true;
-    // Since player and Pikachu are purposefully hidden, now show them.
     player.reset();
     // re-fill the allEnemies list.
     // Don't make JavaScript read the length of an array at every iteration of a for loop. Store the length value in a different variable.
     for (var a = 0, b = enemySpriteList.length; a < b; a++) {
         allEnemies.push(new Enemy(enemySpriteList[a]));
     }
-    // re-fill the pokeballBar.
-    player.numOfPokeballs=data.NUM_OF_POKEBALLS;
 };
 
 
-// 这是我们的玩家要躲避的敌人 
+/**
+ *这是我们的玩家要躲避的敌人
+ */
 var Enemy = function(sprite) {
-    // 要应用到每个敌人的实例的变量写在这里
-    // 我们已经提供了一个来帮助你实现更多
-
-    // 敌人的图片或者雪碧图，用一个我们提供的工具函数来轻松的加载文件
     this.sprite = sprite;
     // the reset function will reset the enemy's position.
     this.reset();
 };
 
-// 此为游戏必须的函数，用来更新敌人的位置
-// 参数: dt ，表示时间间隙
+/**
+ * 此为游戏必须的函数，用来更新敌人的位置
+ * 参数: dt ，表示时间间隙
+ * @param dt
+ */
 Enemy.prototype.update = function(dt) {
-    // 你应该给每一次的移动都乘以 dt 参数，以此来保证游戏在所有的电脑上
-    // 都是以同样的速度运行的
     this.x = this.x + dt * this.speed;
     if (this.x >= canvas.width) {
         this.reset();
     }
 };
 
-// 此为游戏必须的函数，用来在屏幕上画出敌人，
+/**
+ * 此为游戏必须的函数，用来在屏幕上画出敌人，
+  */
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Reset the enemy's position.
+/**
+ * Reset the enemy's position.
+  */
 Enemy.prototype.reset = function() {
     // a new enemy will have a random starting x position.
     this.x = randomInt(data.ENEMY_MIN_STARTING_X, data.ENEMY_MAX_STARTING_X);
@@ -82,29 +86,40 @@ Enemy.prototype.reset = function() {
     this.speed = randomInt(data.ENEMY_MIN_SPEED, data.ENEMY_MAX_SPEED);
 };
 
-// 现在实现你自己的玩家类
-// 这个类需要一个 update() 函数， render() 函数和一个 handleInput()函数
+/**
+ * 玩家类
+  */
 var Player = function() {
     this.sprite = 'images/char-horn-girl.png';
     this.x = data.PLAYER_STARTING_X;
     this.y = data.PLAYER_STARTING_Y;
 }
-// Each time this function is called, the player goes back to the original starting location.
+/**
+ * Each time this function is called, the player goes back to the original starting location
+ */
 Player.prototype.reset = function() {
     this.sprite = 'images/char-horn-girl.png';
     this.x = data.PLAYER_STARTING_X;
     this.y = data.PLAYER_STARTING_Y;
-    this.catch = false;
+};
+
+
+Player.prototype.update = function() {
 };
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
+
 };
 
 Player.prototype.hide = function() {
     this.x = -101;
 };
 
+/**
+ * 根据上下左右按钮的输入控制玩家的移动
+ * @param input
+ */
 Player.prototype.handleInput = function(input) {
     var self=this;
     // Collision detection for obstacles must be put inside handleInput function.
@@ -149,9 +164,8 @@ var state = new State(),
     state.restart();
 
 /* Helper functions below.
- *
+ * Create random integers between min and max, inclusive.
  */
-// Create random integers between min and max, inclusive.
 function randomInt(min, max) {
     // Math.floor() returns the largest integer less than or equal to a given number.
     // Math.random() return [0, 1).
@@ -159,8 +173,10 @@ function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Play.handleInput()
-// 方法里面。你不需要再更改这段代码了。
+
+/**
+ * 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Play.handleInput()
+ */
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
