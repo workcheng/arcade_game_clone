@@ -9,7 +9,7 @@
  -
 ````
 
---
+-
  -css
   -style.css     样式
  -images         图片资源
@@ -18,7 +18,7 @@
   -engine.js     游戏引擎
   -resources.js  图片加载工具
  index.html      入口文件
- README.md
+ README.md       说明文件
 ````
  
  
