@@ -75,15 +75,8 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             if (enemy.x < player.x + 50 && enemy.x + 50 > player.x && enemy.y < player.y + 50 && enemy.y + 50 > player.y) {
                 // remember '=' is assignment. When at first you use '=', it doesn't work out right.
-                if (player.catch === true) {
-                    player.numOfPokeballs--;
-                    // If collision happens, reset player and pikachu. Don't reset gems.
-                    player.reset();
-                } else {
-                    player.numOfPokeballs--;
                     // If collision happens, reset player.
                     player.reset();
-                }
             }
         });
 

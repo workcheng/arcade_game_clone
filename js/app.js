@@ -13,7 +13,10 @@ var data = {
   'ENEMY_MIN_SPEED': 100,
   'ENEMY_MAX_SPEED': 300,
   'PLAYER_STARTING_X': 303,
-  'PLAYER_STARTING_Y': 400
+  'PLAYER_STARTING_Y': 400,
+  'WIDTH': 101,
+  'HEIGHT': 83,
+  'DELTA': 15
 };
 
 /**
@@ -92,7 +95,7 @@ Enemy.prototype.reset = function() {
 var Player = function() {
     this.sprite = 'images/char-horn-girl.png';
     this.x = data.PLAYER_STARTING_X;
-    this.y = data.PLAYER_STARTING_Y;
+    this.y = data.PLAYER_STARTING_Y - data.DELTA;
 }
 /**
  * Each time this function is called, the player goes back to the original starting location
@@ -105,10 +108,26 @@ Player.prototype.reset = function() {
 
 
 Player.prototype.update = function() {
+     if (this.x < 0) {
+        this.x=0;
+     } else if(this.x>4*data.WIDTH){
+         this.x=4*data.WIDTH
+     } else if (this.y > 5*data.HEIGHT) {
+         this.y = 5*data.HEIGHT-data.DELTA;
+     } else if (this.y < 0) {
+         this.y = 0-data.DELTA;
+     }
+
+    if(this.y < data.HEIGHT-data.DELTA){
+        this.reset();
+        alert("YOU WIN!");
+        // this.y = 4*101;
+
+    }
 };
 
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y)
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y-data.DELTA)
 
 };
 
@@ -125,31 +144,16 @@ Player.prototype.handleInput = function(input) {
     // Collision detection for obstacles must be put inside handleInput function.
     switch (input) {
         case 'left':
-            if (self.x >= 101) {
-                self.x = self.x - 101;
-            }
+            self.x = self.x - data.WIDTH;
             break;
         case 'up':
-            // No matter the player catches pikachu or not, he can goes up to the second row.
-            if (self.y >= 148) {
-                self.y = self.y - 83;
-                // When at second row, if the player catches pikachu, he can go a step further. Now hands to updateShrinesState() to handle player.
-            } else if (self.y === 65 && self.catch === true) {
-                self.y = self.y -83;
-            }
-
+            self.y = self.y - data.HEIGHT;
             break;
         case 'right':
-            if (self.x <= 303) {
-                self.x = self.x + 101;
-            }
-
+            self.x = self.x + data.WIDTH;
             break;
         case 'down':
-            if (self.y <= 397) {
-                self.y = self.y + 83;
-            }
-
+            self.y = self.y + data.HEIGHT;
             break;
     }
 
