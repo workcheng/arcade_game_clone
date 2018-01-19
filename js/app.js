@@ -121,8 +121,6 @@ Player.prototype.update = function() {
     if(this.y < data.HEIGHT-data.DELTA){
         this.reset();
         alert("YOU WIN!");
-        // this.y = 4*101;
-
     }
 };
 
